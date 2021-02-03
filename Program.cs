@@ -9,6 +9,7 @@ namespace HelloDotnet
         	// added comment #001
         	Console.WriteLine("2021/01/21");
             Console.WriteLine("Hello Dotnet!");
+            Console.WriteLine("2021/02/03_haha");
         }
     }
 }
