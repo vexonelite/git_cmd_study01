@@ -8,7 +8,7 @@ namespace HelloDotnet
         {
         	// added comment #001
         	Console.WriteLine("2022/08/22");
-            Console.WriteLine("Hello Dotnet!");
+            Console.WriteLine("Type Script!");
             Console.WriteLine("2021/02/03" + "_haha" + "_heyhey");
         }
     }
