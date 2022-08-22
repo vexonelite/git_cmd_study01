@@ -8,8 +8,8 @@ namespace HelloDotnet
         {
         	// added comment #001
         	Console.WriteLine("2022/08/22");
-            Console.WriteLine("Hello Dotnet!");
-            Console.WriteLine("2021/02/03" + "_haha" + "_heyhey");
+            Console.WriteLine("Release");
+            Console.WriteLine("Accelerating new GitHub Actions workflows");
         }
     }
 }
