@@ -1,4 +1,4 @@
-name: learn-github-actions
+name: clasp deploy study
 on:
   push:
     branches:
@@ -9,10 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: chmod +x ./clasp_json_access.sh
-      - name: Decrypt large secret
-        run: ./clasp_json_access.sh
-        env:
-          CLASP_JSON_USAGE: ${{ secrets.CLASP_JSON_USAGE }}
-      - name: Test printing your secret (Remove this step in production)
-        run: cat $HOME/.clasprc.json
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - run: npm i @google/clasp -g
+      - run: clasp -v
+      - run: gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.CLASP_JSON_USAGE }}" \
+              --output $HOME/.clasprc.json .clasprc.json.gpg
+      - run: cat $HOME/.clasprc.json
+      - run: cd clasp_study
+      - run: clasp push
