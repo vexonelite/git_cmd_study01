@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - run: chmod +x ./clasp_json_access.sh
       - name: Decrypt large secret
         run: ./clasp_json_access.sh
         env:
