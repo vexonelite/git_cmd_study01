@@ -14,7 +14,8 @@ jobs:
           node-version: '14'
       - run: npm i @google/clasp -g
       - run: clasp -v
-      - run: gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.CLASP_JSON_USAGE }}" \
+      - run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.CLASP_JSON_USAGE }}" \
               --output $HOME/.clasprc.json .clasprc.json.gpg
       - run: cat $HOME/.clasprc.json
       - run: cd clasp_study
