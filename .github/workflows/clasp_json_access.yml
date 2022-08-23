@@ -18,5 +18,7 @@ jobs:
           gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.CLASP_JSON_USAGE }}" \
               --output $HOME/.clasprc.json .clasprc.json.gpg
       - run: cat $HOME/.clasprc.json
+      - run: ls -al
       - run: cd clasp_study
+      - run: ls -al
       - run: clasp push
