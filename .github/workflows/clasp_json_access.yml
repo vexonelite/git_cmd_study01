@@ -1,0 +1,17 @@
+name: learn-github-actions
+on:
+  push:
+    branches:
+      - 'dev'
+jobs:
+  clasp-json-access:
+    name: Clasp JSON access
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Decrypt large secret
+        run: ./clasp_json_access.sh
+        env:
+          CLASP_JSON_USAGE: ${{ secrets.CLASP_JSON_USAGE }}
+      - name: Test printing your secret (Remove this step in production)
+        run: cat $HOME/.clasprc.json
