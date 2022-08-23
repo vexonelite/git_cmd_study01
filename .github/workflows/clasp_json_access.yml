@@ -22,4 +22,4 @@ jobs:
           ls -al
           cd clasp_study
           ls -al
-          clasp push
+          clasp status
