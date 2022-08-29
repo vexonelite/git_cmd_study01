@@ -1,0 +1,107 @@
+<script type="text/javascript" charset="utf-8">
+  
+  var saColumnDefs = [
+    { headerName: "SA#", field: "sa_num", cellStyle: defaultCellStyle, headerClass: 'header-sa', cellRenderer: 'agGroupCellRenderer', width: 130, suppressSizeToFit: true },
+    { headerName: "INV#", field: "inv_num", cellStyle: defaultCellStyle, headerClass: 'header-sa', width: 95, suppressSizeToFit: true },
+    { headerName: "Doc Type", field: "doc_type", cellStyle: defaultCellStyle, headerClass: 'header-sa', width: 140, suppressSizeToFit: true },
+    { headerName: "SA# Doc Date", field: "sa_num_doc_date", cellStyle: defaultCellStyle, headerClass: 'header-sa', width: 95, suppressSizeToFit: true },
+    { headerName: "Real Ship Date", field: "real_ship_date", cellStyle: defaultCellStyle, headerClass: 'header-sa', width: 95, suppressSizeToFit: true },
+    { headerName: "Master Tracking#", field: "master_tracking_num", cellStyle: defaultCellStyle, headerClass: 'header-sa', width: 280, suppressSizeToFit: true, wrapText: true, autoHeight: true },
+    { headerName: "Approvel Status", field: "approvel_status", cellStyle: defaultCellStyle, headerClass: 'header-sa', width: 80, suppressSizeToFit: true },
+    { headerName: "Ship to", field: "ship_to", cellStyle: defaultCellStyle, headerClass: 'header-sa', width: 280, suppressSizeToFit: true, wrapText: true, autoHeight: true },
+    { headerName: "ATTN", field: "attn", cellStyle: defaultCellStyle, headerClass: 'header-sa', width: 280, suppressSizeToFit: true, wrapText: true, autoHeight: true },
+  ];
+
+  // level 2 grid options - sa data
+  var saDetailGridOptions = {
+    masterDetail: true,
+    columnDefs: saColumnDefs,
+    defaultColDef: agGridDefaultColDef2,
+    enableCellTextSelection: true,
+    headerHeight: 56, // 28 * 2
+    detailCellRenderer: "myDetailCellRenderer",
+    components: {
+      myDetailCellRenderer: DetailCellRenderer,
+    },  
+    onGridReady: function (params) {
+      // using auto height to fit the height of the the detail grid
+      params.api.setDomLayout('autoHeight');
+      params.api.sizeColumnsToFit(); // similar to ``flow:1``
+    },
+    detailRowAutoHeight: true,
+  };
+
+  var saDetailCellRendererParams = {
+    detailGridOptions: saDetailGridOptions,
+    // A function that provides what rows to display in the Detail Grid.
+    // The callback is called for each Detail Grid and sets the rows to display in each Detail Grid.
+    getDetailRowData: function (params) {
+      // specify ``callRecords`` as the Detail Grid
+      params.successCallback(params.data.sa_data);
+    },
+  };
+
+  var soColumnDefs = [
+    { headerName: "SO#/YX#", field: "so_num_yx_num", cellStyle: defaultCellStyle, headerClass: 'header-so', cellRenderer: 'agGroupCellRenderer', width: 130, 
+      suppressSizeToFit: true, suppressMenu: true },
+    { headerName: "SO# Doc Date", field: "so_num_doc_date", cellStyle: defaultCellStyle, headerClass: 'header-so', width: 95, 
+      suppressSizeToFit: true, suppressMenu: true },
+    { headerName: "CK(Y/N)", field: "ck_nun_yn", cellStyle: defaultCellStyle, headerClass: 'header-so', width: 90, suppressSizeToFit: true, suppressMenu: true },
+    { headerName: "PO#", field: "po_num", cellStyle: defaultCellStyle, headerClass: 'header-so', suppressMenu: true },
+    { headerName: "CUST#", field: "cust_num", cellStyle: defaultCellStyle, headerClass: 'header-so', suppressMenu: true },
+    { headerName: "CUST NAME", field: "cust_name", cellStyle: defaultCellStyle, headerClass: 'header-so', wrapText: true, autoHeight: true },
+    { headerName: "Doc Type", field: "doc_type", cellStyle: defaultCellStyle, headerClass: 'header-so', width: 140, suppressSizeToFit: true, suppressMenu: true },
+    { headerName: "Brand", field: "brand", cellStyle: defaultCellStyle, headerClass: 'header-so', width: 140, suppressSizeToFit: true, suppressMenu: true },
+    { headerName: "File Location", field: "file_location", cellStyle: defaultCellStyle, headerClass: 'header-so', width: 95, 
+      suppressSizeToFit: true, suppressMenu: true },
+  ];
+
+  // level 1 grid options - so data
+  var gridOptions = {
+    // enable Master / Detail
+    masterDetail: true,
+    columnDefs: soColumnDefs,
+    defaultColDef: agGridDefaultColDef,
+    headerHeight: 56, // 28 * 2
+    enableCellTextSelection: true,
+    // *** needed for the top level of Master Row
+    detailRowAutoHeight: true, 
+    
+    onGridReady: (event) => {
+      theGridOptions = event;
+      //theGridOptions.api.hideOverlay();
+      theGridOptions.api.setRowData(undefined);
+      theGridOptions.api.sizeColumnsToFit(); // similar to ``flow:1``
+    },
+
+    // provide Detail Cell Renderer Params for SA
+    detailCellRendererParams: saDetailCellRendererParams,
+  };
+
+  function initInputDates() {
+    var theCurrentDate = new Date();
+    var minDateString = '2019-10-01';
+    var minDate = dateStringToGmtDate(minDateString);
+    var theCurrentDateStr = getGivenDateString(theCurrentDate);
+    var threeMonthsAgoStr = getGivenDateString(minDate);
+    setDomDateRange("start_date", theCurrentDateStr, threeMonthsAgoStr, theCurrentDateStr);
+    //setDomDateRange("end_date", theCurrentDateStr, threeMonthsAgoStr, theCurrentDateStr);
+    setDomDateRange("end_date", theCurrentDateStr, "", "");
+  }
+
+  //INITIALIZE FUNCTIONS ONLOAD
+  function functionInit() {
+    preventFormSubmit();
+    initInputDates();
+    //checkCheckboxDom("opened_option_checkbox", true);
+    requestLastUpdateTime();
+  }
+
+  window.addEventListener("load", functionInit, true);
+
+  // lookup the container we want the Grid to use
+  var eGridDiv = document.querySelector("#data-table");
+  // create the grid passing in the div to use together with the columns & data we want to use
+  new agGrid.Grid(eGridDiv, gridOptions);
+
+</script>

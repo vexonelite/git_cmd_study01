@@ -2,14 +2,67 @@
 <html>
   <head>
     <base target="_top">
-    <?!= include('css_common'); ?> <!-- See css_common.html file --> 
+        
+    <script src="https://unpkg.com/ag-grid-enterprise/dist/ag-grid-enterprise.min.noStyle.js"></script>
+    <!-- the grid "structure" stylesheet -->
+    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
+    <!-- grid themes -->
+    <!-- <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-alpine.css"> -->
+    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-balham.css">
+    
+    <?!= include('css_common'); ?> <!-- See css_common.html file -->
+    <?!= include('css_so_tracking_common'); ?> <!-- See css_so_tracking_common.html file -->
+
+    <title>SO Tracking - Lighting</title>
   </head>
 
   <body>
-    <h2>Clasp Study</h2>
+    <h2>SO Tracking - Lighting</h2>
     <div class="root_container">
-      <h3>Hello world</h3>
+      <!-- Beginning of form -->
+      <?!= include('form'); ?> <!-- See form.html file -->
+      <!-- End of form -->
+    </div>    
+    <!-- Beginning of Update Time -->
+    <div class="flex_display_flex flex_wrap_nowrap flex_direction_row flex_align_items_center width_percent99">
+      <div>
+        <p>ver: 0.9.10</p>
+      </div>
+      <div class="width_pixel10"></div>
+      <div>
+        <p> | </p>
+      </div>
+      <div class="width_pixel10"></div>
+      <div>
+        <p># of data found: </p>
+      </div>
+      <div class="width_pixel10"></div>
+      <div>
+        <p id="num_of_data">0</p>
+      </div>
+      <div class="width_pixel10"></div>
+      <div>
+        <p> | </p>
+      </div>
+      <div class="width_pixel10"></div>
+      <div>
+        <p>Last Update Time: </p>
+      </div>
+      <div class="width_pixel10"></div>
+      <div>
+        <p id="last_update_time">YYYY/MM/DD</p>
+      </div>
     </div>
+    <!-- End of Update Time -->
+    <div id="data-table" class="ag-theme-balham"></div>
+    <br><br><br>
+    <?!= include('javascript_pure_functions'); ?> <!-- See javascript_pure_functions.html file -->
+    <?!= include('javascript_commons'); ?> <!-- See javascript_commons.html file -->
+    <?!= include('detail_cell_renderer'); ?> 
+    <!-- See detail_cell_renderer.html file -->
+    <!-- <?!= include('detail_cell_renderer_lite'); ?> -->
+    <!-- See detail_cell_renderer_lite.html file -->
+    <?!= include('javascript'); ?> <!-- See javascript.html file -->
   </body>
 
 </html>

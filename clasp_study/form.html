@@ -1,0 +1,165 @@
+<form onsubmit="handleFormSubmit(this)">
+
+  <!-- Beginning of flex_container1 -->
+  <div class="flex_display_flex flex_wrap_nowrap">
+
+    <!-- Beginning of flex_container2 (Left) -->
+    <div class="flex_display_flex flex_wrap_nowrap flex_direction_column padding_pixel5 width_percent50">
+
+      <!-- Beginning of YX & Opened -->
+      <div class="flex_display_flex flex_wrap_nowrap flex_direction_row flex_align_items_center width_percent99">
+        <input type="checkbox" id="yx_number_checkbox" name="yx_number_checkbox" value="yx_number_checked">
+        <label class="form_label1 width_pixel130" for="yx_number_checkbox">YX</label>
+        <!-- <div class="width_pixel10"></div>
+        <input type="checkbox" id="opened_option_checkbox" name="opened_option_checkbox" value="opened_option_checked">
+        <label class="form_label2 width_pixel100" for="opened_option_checkbox">Open only</label> -->
+      </div>
+      <!-- End of YX & Opened -->
+
+      <!-- Beginning of Date  -->
+      <div class="flex_display_flex flex_wrap_nowrap flex_direction_row flex_align_items_center width_percent99">
+        <input type="checkbox" id="date_option" name="date_option" value="date_option_checked">
+        <label class="form_label1 width_pixel120" for="date_option">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" class="form_input_common1 form_input_margin_padding1">
+        <div class="width_pixel10"></div>
+        <label class="form_label1 width_pixel80">End Date:</label>
+        <input type="date" id="end_date" name="end_date" class="form_input_common1 form_input_margin_padding1">
+      </div>
+      <!-- End of Date -->
+
+      <!-- Beginning of SO#/YX# -->
+      <div class="flex_display_flex flex_wrap_nowrap flex_direction_row flex_align_items_center width_percent99">
+        <input type="checkbox" id="so_number_checkbox" name="so_number_checkbox" value="so_number_checked">
+        <label class="form_label1 width_pixel130" for="so_number_checkbox">SO#/YX#:</label>
+        <div class="width_pixel10"></div>
+        <div class="width_percent99">
+          <input type="text" id="so_number" name="so_number" placeholder="" class="form_input_common1 form_input_margin_padding1 width_percent99">
+        </div>
+      </div>
+      <!-- End of SO#/YX# -->
+
+      <!-- Beginning of invoice # -->
+      <div class="flex_display_flex flex_wrap_nowrap flex_direction_row flex_align_items_center width_percent99">
+        <input type="checkbox" id="invoice_number_checkbox" name="invoice_number_checkbox" value="invoice_number_checked">
+        <label class="form_label1 width_pixel130" for="invoice_number_checkbox">Invoice #:</label>
+        <div class="width_pixel10"></div>
+        <div class="width_percent99">
+          <input type="text" id="invoice_number" name="invoice_number" placeholder="" class="form_input_common1 form_input_margin_padding1 width_percent99">
+        </div>
+      </div>
+      <!-- End of invoice # -->
+
+      <!-- Beginning of customer name -->
+      <div class="flex_display_flex flex_wrap_nowrap flex_direction_row flex_align_items_center width_percent99">
+        <input type="checkbox" id="customer_name_checkbox" name="customer_name_checkbox" value="customer_name_checked">
+        <label class="form_label1 width_pixel130" for="customer_name_checkbox">Customer name:</label>
+        <div class="width_pixel10"></div>
+        <div class="width_percent99">
+          <input type="text" id="customer_name" name="customer_name" placeholder="" class="form_input_common1 form_input_margin_padding1 width_percent99">
+        </div>
+      </div>
+      <!-- End of custom name -->
+
+    </div>
+    <!-- End of flex_container2 (Left) -->
+
+    <!-- Beginning of flex_container2 (Right) -->
+    <div class="flex_display_flex flex_wrap_nowrap flex_direction_column padding_pixel5 width_percent50">
+
+      <!-- Beginning of Doc Type -->
+      <div class="flex_display_flex flex_wrap_nowrap flex_direction_row flex_align_items_center width_percent99">
+        <input type="checkbox" id="doc_type_checkbox" name="doc_type_checkbox" value="doc_type_checked">
+        <label class="form_label1 width_pixel80" for="doc_type_checkbox">Doc Type:</label>
+        <div class="width_pixel10"></div>
+        <div class="width_percent99" style="flex-grow: 99">
+          <select id="doc_type_select" name="doc_type_select" class="form_input_common1 form_input_margin_padding1 width_percent99">
+            <option value="loan">Loaner</option>
+            <option value="rma">RMA</option>
+            <option value="drop_ship">Drop Ship</option>
+            <option value="rental">Rental</option>
+            <option value="sample">Sample</option>
+          </select>
+        </div>
+      </div>
+      <!-- End of Doc Type -->
+
+      <!-- Beginning of Brand -->
+      <div class="flex_display_flex flex_wrap_nowrap flex_direction_row flex_align_items_center width_percent99">
+        <input type="checkbox" id="brand_checkbox" name="brand_checkbox" value="brand_checked">
+        <label class="form_label1 width_pixel80" for="brand_checkbox">Brand:</label>
+        <div class="width_pixel10"></div>
+        <div class="width_percent99">
+          <select id="brand_select" name="brand_select" class="form_input_common1 form_input_margin_padding1 width_percent99">
+            <!-- <option value="business_promotion">BUSINESS PROMOTION</option> -->
+            <!-- <option value="lighting_warranty">LIGHTING WARRANTY</option> -->
+            <!-- <option value="nre_charge_l">NRE CHARGE - L</option> -->
+            <option value="rental_income_l">RENTAL INCOME - L</option>
+            <!-- <option value="restocking_fees_l">RESTOCKING FEES - L</option> -->
+            <!-- <option value="royalty_lighting">ROYALTY - LIGHTING</option> -->
+            <option value="sales_cielux">SALES - CIELUX</option>
+            <option value="sales_fiber_lamp">SALES - FIBER LAMP</option>
+            <option value="sales_fiilex">SALES - FIILEX</option>
+            <option value="sales_kessil_a">SALES - KESSIL-A</option>
+            <option value="sales_kessil_h">SALES - KESSIL-H</option>
+            <option value="sales_kessil_p">SALES - KESSIL-P</option>
+            <!-- <option value="sales_scopeled">SALES - SCOPELED</option> -->
+            <!-- <option value="sales_discounts_l">SALES DISCOUNTS - L</option> -->
+            <!-- <option value="sales_returns_l">SALES RETURNS - L</option> -->
+            <!-- <option value="sales_tax">SALES TAX</option> -->
+            <!-- <option value="service_charges_l">SERVICE CHARGES - L</option> -->
+            <!-- <option value="shipping_charges_l">SHIPPING CHARGES - L</option> -->
+          </select>
+        </div>
+      </div>
+      <!-- End of Brand -->
+
+      <!-- Beginning of Status -->
+      <div class="flex_display_flex flex_wrap_nowrap flex_direction_row flex_align_items_center width_percent99">
+        <input type="checkbox" id="shipping_status_checkbox" name="shipping_status_checkbox" value="shipping_status_checked">
+        <label class="form_label1 width_pixel80" for="shipping_status_checkbox">Shipping Status:</label>
+        <div class="width_pixel10"></div>
+        <div class="width_percent99">
+          <select id="shipping_status_select" name="shipping_status_select" class="form_input_common1 form_input_margin_padding1 width_percent99">
+            <option value="yes">Y</option>
+            <option value="no">N</option>
+          </select>
+        </div>
+      </div>
+      <!-- End of Status -->
+
+      <!-- Beginning of CK_Y_N -->
+      <div class="flex_display_flex flex_wrap_nowrap flex_direction_row flex_align_items_center width_percent99">
+        <input type="checkbox" id="ck_status_checkbox" name="ck_status_checkbox" value="ck_status_checked">
+        <label class="form_label1 width_pixel80" for="ck_status_checkbox">CK Status:</label>
+        <div class="width_pixel10"></div>
+        <div class="width_percent99">
+          <select id="ck_status_select" name="ck_status_select" class="form_input_common1 form_input_margin_padding1 width_percent99">
+            <option value="yes">Y</option>
+            <option value="no">N</option>
+          </select>
+        </div>
+      </div>
+      <!-- End of CK_Y_N -->
+
+      <!-- Beginning of Model #-->
+      <div class="flex_display_flex flex_wrap_nowrap flex_direction_row flex_align_items_center width_percent99">
+        <input type="checkbox" id="model_number_checkbox" name="model_number_checkbox" value="model_checked">
+        <label class="form_label1 width_pixel80" for="model_number_checkbox">Model No:</label>
+        <div class="width_pixel10"></div>
+        <div class="width_percent99" style="flex-grow: 99">
+          <input type="text" id="model_number" name="model_number" placeholder="" class="form_input_common1 form_input_margin_padding1 width_percent99">
+        </div>
+      </div>
+      <!-- End of Model # -->
+
+    </div>
+    <!-- End of flex_container2 (Right) -->
+
+  </div>
+  <!-- End of flex_container1 -->
+
+  <div class="row">
+    <input type="submit" value="Search" class="form_submit1 width_percent100">
+  </div>
+
+</form>

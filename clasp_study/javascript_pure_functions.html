@@ -1,0 +1,45 @@
+<script type="text/javascript" charset="utf-8">
+
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+  var getRandomArbitrary = (min, max) => Math.random() * (max - min) + min;
+
+  var getGivenDateString = (givenDate) => givenDate.toISOString().slice(0, 10);
+
+  var dateStringToGmtDate = (dateString) => new Date(dateString + ' GMT'); // added by elite_lin - 2022/06/27
+  
+  function isEmptyContent (givenItem) {
+    if (typeof givenItem === "string") {
+      if (!givenItem) { return true; }
+    } 
+    else if (givenItem === undefined) { return true; }
+    else if (givenItem.toString().length <= 0) { return true; }
+    return false;
+  };
+
+  function setDomDateRange(domId, currentDateStr, minDateStr, maxDateStr) {
+    var theDateDom = document.getElementById(domId);
+    if (!theDateDom) { return; }
+    if (!isEmptyContent(currentDateStr)) { theDateDom.value = currentDateStr; }
+    if (!isEmptyContent(minDateStr)) { theDateDom.min = minDateStr; }
+    if (!isEmptyContent(maxDateStr)) { theDateDom.max = maxDateStr; }    
+  }
+
+  function checkCheckboxDom(domId, enabledFlag) {
+    var theCheckBoxDom = document.getElementById(domId);
+    if (!theCheckBoxDom) { return; }
+    theCheckBoxDom.checked = enabledFlag;
+  }
+
+  function getCheckboxDomState(domId) {
+    var theCheckBoxDom = document.getElementById(domId);
+    if (!theCheckBoxDom) { return - 1; }
+    return theCheckBoxDom.checked ? 1 : 0;
+  }
+
+  function setDomInnerText(text, domId) {
+    var theDomObject = document.getElementById(domId);
+    if(!theDomObject) { return; }
+    theDomObject.innerText = text;
+  }
+
+</script>

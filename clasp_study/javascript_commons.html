@@ -1,0 +1,137 @@
+<script type="text/javascript" charset="utf-8">
+
+  // [start] definition of global variables
+  // let the grid know which columns and what data to use
+  var theGridOptions;
+
+  var cacheFormObject = undefined;
+  var currentRetry = 0;
+  // [end] definition of global variables
+
+  // [start] definition of parameters
+  var retryLimit = 99;        // 99 times
+  var retryDelayMin = 3000;   // 3 seconds
+  var retryDelayMax = 5000;   // 5 seconds
+  // [end] definition of parameters
+
+  var jsonKeyDefine = {
+    jsonArrayKey:     'data',
+    isReadyKey:       'isReady',
+    sheetsAreReady:   'Y',
+    sheetsNotReady:   'N',
+  };
+
+  var defaultCellStyle = {
+    fontSize: '13px', color: '#000000', border: 'solid', borderTopWidth: '0px',
+    borderLeftWidth: '0px', borderBottomWidth: '0px', borderRightWidth: '0.5px', 
+  };
+
+  var filterOnlyMenuItem = ['filterMenuTab'];
+
+  var agGridDefaultColDef = {
+    sortable: false,
+    filter: "agTextColumnFilter",
+    resizable: false,
+    //suppressMenu: true, // hamburger icon
+    //flex: 1,
+  };
+
+  var agGridDefaultColDef2 = {
+    sortable: false,
+    resizable: false,
+    suppressMenu: true, // hamburger icon
+  };
+
+  //https://www.ag-grid.com/javascript-data-grid/column-sizing/
+  function autoSizeAll(givenGridOptions, skipHeader) {
+    if (!givenGridOptions) { return; }
+    var allColumnIds = [];
+    givenGridOptions.columnApi.getAllColumns().forEach((column) => {
+      allColumnIds.push(column.getId());
+    });
+
+    givenGridOptions.columnApi.autoSizeColumns(allColumnIds, skipHeader);
+  }
+
+  // Prevent forms from submitting.
+  function preventFormSubmit() {
+    var forms = document.querySelectorAll("form");
+    for (var i = 0; i < forms.length; i++) {
+      forms[i].addEventListener("submit", function (event) {
+        event.preventDefault();
+      });
+    }
+  }
+  
+  //HANDLE FORM SUBMISSION
+  function handleFormSubmit(formObject) {
+    cacheFormObject = formObject;
+    currentRetry = retryLimit;
+    onNumberOfDataChanged(0);
+    callCloudFunction(cacheFormObject);
+  }
+
+  function callCloudFunction(formObject) {
+    google.script.run.withSuccessHandler(showData).processForm(formObject);
+    if (theGridOptions) { theGridOptions.api.showLoadingOverlay(); }
+  }
+
+  //THIS FUNCTION GENERATE THE DATA TABLE FROM THE DATA ARRAY
+  function showData(response) {
+    try {
+      //console.log(response);
+      var json = JSON.parse(response);
+      if (json && theGridOptions) {
+        console.log(json);
+        if(json[jsonKeyDefine.isReadyKey] == jsonKeyDefine.sheetsAreReady) {
+          theGridOptions.api.setRowData(json[jsonKeyDefine.jsonArrayKey]);
+          onNumberOfDataChanged(json[jsonKeyDefine.jsonArrayKey].length);
+          requestLastUpdateTime();
+        }
+        else {
+          //theGridOptions.api.hideOverlay();
+          console.log('currentRetry: [' + currentRetry + ']');
+          if (currentRetry > 0) {
+            currentRetry = currentRetry - 1;
+            var retryDelay = getRandomArbitrary(retryDelayMin, retryDelayMax);
+            window.setTimeout(callCloudFunction, retryDelay, cacheFormObject);
+          }
+          else {
+            console.log('reach the retryLimit!!!');
+            theGridOptions.api.hideOverlay();
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      if (theGridOptions) { theGridOptions.api.setRowData(undefined); }
+      // expected output: ReferenceError: nonExistentFunction is not defined
+      // Note - error messages will vary depending on browser
+    }
+  }
+
+  function onNumberOfDataChanged(numOfData) {
+    setDomInnerText(numOfData, 'num_of_data');
+  }
+
+  function requestLastUpdateTime() {
+    google.script.run.withSuccessHandler(onLastUpdateTimeAvailable).getLastUpdateTime();
+  }
+
+  function onLastUpdateTimeAvailable(lastUpdatedAtResponse) {
+    //console.log('onLastUpdateTimeAvailable');
+    console.log(lastUpdatedAtResponse);    
+    try {
+      var lastUpdatedAtJson = JSON.parse(lastUpdatedAtResponse);
+      if(lastUpdatedAtJson) {
+        setDomInnerText(lastUpdatedAtJson[jsonKeyDefine.jsonArrayKey], 'last_update_time');
+      }
+    }
+    catch (error) {
+      console.error('error on onLastUpdateTimeAvailable:');
+      console.error(error);
+      dom_last_update_time.innerText = '';
+    }
+  }
+
+</script>
