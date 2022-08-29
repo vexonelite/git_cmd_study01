@@ -1,0 +1,138 @@
+image: node:18
+
+cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+        # cache node modules between runs
+        - node_modules/
+
+stages:
+    # build the code and generate bundles
+    - build
+    # publish documentation pages
+    - deploy
+    # build a raspberry pi linux image with the application baked in
+    - build_image
+
+build_code:
+    stage: build
+    tags: [linux]
+
+    before_script:
+        - apt-get update && apt-get install -y zip
+
+    script:
+        # install dependencies
+        - npm install
+        # install dependencies for docusaurus
+        - cd documentation-website
+        - npm install
+        - cd ..
+        # build the frontend
+        - REACT_APP_GIT_BRANCH=${CI_COMMIT_BRANCH} npm run build
+        # build the backend
+        - npm run build-backend
+        # Make artifact for offline-documentation
+        - cd build/documentation
+        - zip -r -q ../../offline-documentation.zip ./*
+
+    artifacts:
+        name: '${CI_PROJECT_NAME}_${CI_COMMIT_SHORT_SHA}'
+        paths:
+            # archive the dist and build folders
+            - dist
+            - build
+            - offline-documentation.zip
+        expire_in: '12 hours'
+
+pages:
+    stage: deploy
+    tags: [linux]
+    # use the custom pages image from the gitlab image registry for this stage
+    image: gitlab.diconcloud.com:5050/kkovacs/oss_97542/pages:latest
+
+    before_script:
+        # move the public folder to a hidden folder
+        - mv public .public
+        - python3 --version
+        - python3 -m pip --version
+
+    script:
+        # install dependencies
+        - npm install
+        # generate the documentation pages
+        - npm run build-documents
+
+    after_script:
+        # rename the docs folder
+        - mv generated-docs public
+        - mv docs/ public/js/
+        - mv generated-markdown public/md/
+
+    artifacts:
+        paths:
+            # archive the public folder
+            - public
+            - generated-getting-started
+
+    rules:
+        # only run this stage on the dev and main branches
+        - if: '$CI_COMMIT_BRANCH == "dev"'
+          when: always
+        - if: '$CI_COMMIT_BRANCH == "main"'
+          when: always
+
+build_image:
+    stage: build_image
+    tags: [linux]
+    rules:
+        # only run this stage on the dev and main branches
+        - if: '$CI_COMMIT_BRANCH == "dev"'
+          when: always
+        - if: '$CI_COMMIT_BRANCH == "main"'
+          when: always
+        - if: '$CI_COMMIT_MESSAGE =~ /\[buildme\]/'
+          when: always
+        # or when we do a manual build
+        - when: manual
+
+    # use the custom image from the gitlab image registry for this stage
+    image: gitlab.diconcloud.com:5050/kkovacs/oss_97542/pi-gen:latest
+
+    variables:
+        # need to clone pi-gen submodule
+        GIT_SUBMODULE_STRATEGY: recursive
+
+    script:
+        - ls -al
+        - dpkg-reconfigure qemu-user-static
+        # generate an SSH key for this image
+        - ssh-keygen -f oss-ssh-key -N "" -C "DiCon-$(git rev-parse HEAD)"
+        - cd pi-gen
+        # create a config file for pi-gen
+        - |
+            cat > config << END_TEXT
+                ENABLE_SSH=1
+                IMG_NAME="Dicon-Raspbian"
+                IMG_FILENAME="Dicon-Raspbian"
+                DATABASE_USERNAME="oss-admin"
+                DATABASE_PASSWORD="oss-admin"
+                USE_QCOW2="0"
+                PUBKEY_ONLY_SSH="1"
+            END_TEXT
+        - echo "PUBKEY_SSH_FIRST_USER='$(cat ../oss-ssh-key.pub)'" >> config
+        # run the pi-gen build
+        - ./build.sh -c config
+        # Copy the image up to the oss_directory for artifacts
+        - mv deploy/image_*.zip ../image.zip
+        - mv deploy/*.osssoftware ..
+    artifacts:
+        name: '${CI_PROJECT_NAME}_${CI_COMMIT_SHORT_SHA}'
+        paths:
+            # archive the pi-gen image
+            - image.zip
+            # archive the SSH key for the image
+            - oss-ssh-key
+            - '*.osssoftware'
+            # archive the documentation
+            - offline-documentation.zip
