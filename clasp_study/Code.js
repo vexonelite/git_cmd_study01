@@ -2,7 +2,7 @@
 function doGet() {
   // [Can one set title in google script](https://stackoverflow.com/questions/38542820/can-one-set-title-in-google-script)  
   const htmlOutput = HtmlService.createTemplateFromFile('index').evaluate();
-  htmlOutput.setTitle('L - SO Tracking');
+  htmlOutput.setTitle('L - SO Tracking (Preview)');
   return htmlOutput;
 }
 
@@ -10,14 +10,18 @@ function doGet() {
 
 // [start] revision by elite_lin - 2022/07/27
 const SO_TRACKING_LIGHTING_VARIABLES = {
-  debugMode:          false,
+  debugMode:          true,
   
   // SoTracking_Lighting_Dev:
-  // https://docs.google.com/spreadsheets/d/1T19J694S1GI5KoHCyLASmqHaSQ5NiYbVdNNHxXEQQeI/  
+  // https://docs.google.com/spreadsheets/d/1T19J694S1GI5KoHCyLASmqHaSQ5NiYbVdNNHxXEQQeI/
   sheetIdDev:         '1T19J694S1GI5KoHCyLASmqHaSQ5NiYbVdNNHxXEQQeI',
 
+  // SoTracking_Lighting_Dev2:
+  // https://docs.google.com/spreadsheets/d/1OuC63GRFwgjPDUlHhlBzWS4qNMBBQwZ__24ll52rxzE/
+  //sheetIdDev:         '1OuC63GRFwgjPDUlHhlBzWS4qNMBBQwZ__24ll52rxzE',
+
   // SoTracking_Lighting:
-  // https://docs.google.com/spreadsheets/d/1eanl8rZ9RiCBBZ3yyokcP-8uDmVBdEbAUXFVSiWrqAk/  
+  // https://docs.google.com/spreadsheets/d/1eanl8rZ9RiCBBZ3yyokcP-8uDmVBdEbAUXFVSiWrqAk/
   sheetId:            '1eanl8rZ9RiCBBZ3yyokcP-8uDmVBdEbAUXFVSiWrqAk',
 };
 // [end] revision by elite_lin - 2022/07/27

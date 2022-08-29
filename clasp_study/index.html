@@ -13,11 +13,11 @@
     <?!= include('css_common'); ?> <!-- See css_common.html file -->
     <?!= include('css_so_tracking_common'); ?> <!-- See css_so_tracking_common.html file -->
 
-    <title>SO Tracking - Lighting</title>
+    <title>SO Tracking - Lighting (Preview)</title>
   </head>
 
   <body>
-    <h2>SO Tracking - Lighting</h2>
+    <h2>SO Tracking - Lighting (Preview)</h2>
     <div class="root_container">
       <!-- Beginning of form -->
       <?!= include('form'); ?> <!-- See form.html file -->
@@ -25,14 +25,6 @@
     </div>    
     <!-- Beginning of Update Time -->
     <div class="flex_display_flex flex_wrap_nowrap flex_direction_row flex_align_items_center width_percent99">
-      <div>
-        <p>ver: 0.9.10</p>
-      </div>
-      <div class="width_pixel10"></div>
-      <div>
-        <p> | </p>
-      </div>
-      <div class="width_pixel10"></div>
       <div>
         <p># of data found: </p>
       </div>
@@ -52,6 +44,18 @@
       <div>
         <p id="last_update_time">YYYY/MM/DD</p>
       </div>
+      <div class="width_pixel10"></div>
+      <div>
+        <p> | </p>
+      </div>
+      <div class="width_pixel10"></div>
+      <div>
+        <p>Last Sync Time: </p>
+      </div>
+      <div class="width_pixel10"></div>
+      <div>
+        <p id="last_sync_time">YYYY/MM/DD</p>
+      </div>
     </div>
     <!-- End of Update Time -->
     <div id="data-table" class="ag-theme-balham"></div>
@@ -60,7 +64,7 @@
     <?!= include('javascript_commons'); ?> <!-- See javascript_commons.html file -->
     <?!= include('detail_cell_renderer'); ?> 
     <!-- See detail_cell_renderer.html file -->
-    <!-- <?!= include('detail_cell_renderer_lite'); ?> -->
+    <!-- <?!= include('detail_cell_renderer_lite'); ?>  -->
     <!-- See detail_cell_renderer_lite.html file -->
     <?!= include('javascript'); ?> <!-- See javascript.html file -->
   </body>

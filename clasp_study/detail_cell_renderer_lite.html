@@ -1,0 +1,124 @@
+<script type="text/javascript" charset="utf-8">
+
+  function DetailCellRenderer() {}
+
+  DetailCellRenderer.prototype.init = function (params) {
+    this.params = params;
+
+    // trick to convert string of HTML into DOM object
+    var eTemp = document.createElement('div');
+    eTemp.innerHTML = this.getTemplate();
+    this.eGui = eTemp.firstElementChild;
+
+    this.setupDetailGrid(params.data.callRecords, params.api, params.node.id);
+  };
+
+  DetailCellRenderer.prototype.setupDetailGrid = function () {
+    var eDetailGrid1 = this.eGui.querySelector('.full-width-grid1');
+    var eDetailGrid2 = this.eGui.querySelector('.full-width-grid2');
+
+    var saDetailsColumnDefs = [
+      { headerName: "ITM", field: "item", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', cellRenderer: 'agGroupCellRenderer', width: 80 },
+      { headerName: "Part#", field: "part_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', wrapText: true },
+      { headerName: "Model#", field: "model_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', wrapText: true },
+      { headerName: "Qty", field: "qty", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', width: 50 },
+      { headerName: "CK#", field: "ck_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', width: 105 },
+      { headerName: "Est. Ship Date", field: "est_ship_date", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', width: 90 },
+      { headerName: "Delay day", field: "delay_day", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', width: 60 },
+    ];
+
+    var boxColumnDefs = [
+      { headerName: "EP#", field: "ep_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 90 },
+      { headerName: "Length", field: "length", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 70 },
+      { headerName: "Width", field: "width", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 65 },
+      { headerName: "Height", field: "height", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 70 },
+      { headerName: "Gross Weight", field: "gross_weight", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 68 },
+      { headerName: "Net Weight", field: "net_weight", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 68 },
+      { headerName: "Qty", field: "qty", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 48 },      
+      { headerName: "Tracking#", field: "tracking_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', wrapText: true },
+    ];
+
+    ///
+
+    // level 3 grid options - boxes data
+    var boxesDetailGridOptions = {
+      columnDefs: boxColumnDefs,
+      defaultColDef: agGridDefaultColDef2,
+      enableCellTextSelection: true,
+      rowData: this.params.data.boxes_data,
+      onGridReady: function (params) {
+        // using auto height to fit the height of the the detail grid
+        params.api.setDomLayout('autoHeight');
+      },
+    };
+
+    // level 3 grid options - sa details data
+    var saDetailsDetailGridOptions = {
+      columnDefs: saDetailsColumnDefs,
+      defaultColDef: agGridDefaultColDef2,
+      enableCellTextSelection: true,
+
+      rowData: this.params.data.sa_details_data,
+      onGridReady: function (params) {
+        // using auto height to fit the height of the the detail grid
+        params.api.setDomLayout('autoHeight');
+      },
+    };
+
+    ///
+
+    new agGrid.Grid(eDetailGrid1, saDetailsDetailGridOptions);
+    new agGrid.Grid(eDetailGrid2, boxesDetailGridOptions);
+
+    // keep the reference - that are used in function ``destroy``
+    this.detailGridApi1 = saDetailsDetailGridOptions.api;
+    this.detailGridApi2 = boxesDetailGridOptions.api;
+
+    var sMasterGridApi = this.params.api;
+    var sRowId = this.params.node.id;
+
+    const gridInfo1 = {
+      id: sRowId,
+      api: saDetailsDetailGridOptions.api,
+      columnApi: saDetailsDetailGridOptions.columnApi,
+    };
+
+    const gridInfo2 = {
+      id: sRowId,
+      api: boxesDetailGridOptions.api,
+      columnApi: boxesDetailGridOptions.columnApi,
+    };
+
+    //console.log(`adding detail grid info with id: ${sRowId}_1`);
+    sMasterGridApi.addDetailGridInfo(`${sRowId}_1`, gridInfo1);
+    //console.log(`adding detail grid info with id: ${sRowId}_2`);
+    sMasterGridApi.addDetailGridInfo(`${sRowId}_2`, gridInfo2);
+  };
+
+  DetailCellRenderer.prototype.getTemplate = function () {
+    var template = `<div class="full-width-panel">
+      <div class="full-width-grid1 ag-theme-alpine"></div>
+      <div class="full-width-grid2 ag-theme-alpine"></div>
+      </div>`;
+    return template;
+  };
+
+  DetailCellRenderer.prototype.getGui = function () {
+    return this.eGui;
+  };
+
+  DetailCellRenderer.prototype.destroy = function () {
+    const dRowId = this.params.node.id;
+    const dMasterGridApi = this.params.api;
+
+    //console.log(`removing Grid Info with id: ${dRowId}_1`);
+    dMasterGridApi.removeDetailGridInfo(`${dRowId}_1`);
+    //console.log(`removing Grid Info with id: ${dRowId}_2`);
+    dMasterGridApi.removeDetailGridInfo(`${dRowId}_2`);
+
+    //console.log('destroying detail grids');
+    if (this.detailGridApi1) { this.detailGridApi1.destroy(); }
+    if (this.detailGridApi2) { this.detailGridApi2.destroy(); }
+  };
+
+</script>

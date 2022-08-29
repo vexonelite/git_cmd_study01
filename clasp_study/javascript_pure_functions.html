@@ -6,7 +6,7 @@
   var getGivenDateString = (givenDate) => givenDate.toISOString().slice(0, 10);
 
   var dateStringToGmtDate = (dateString) => new Date(dateString + ' GMT'); // added by elite_lin - 2022/06/27
-  
+      
   function isEmptyContent (givenItem) {
     if (typeof givenItem === "string") {
       if (!givenItem) { return true; }

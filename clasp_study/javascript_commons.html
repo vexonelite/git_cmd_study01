@@ -15,10 +15,12 @@
   // [end] definition of parameters
 
   var jsonKeyDefine = {
-    jsonArrayKey:     'data',
-    isReadyKey:       'isReady',
-    sheetsAreReady:   'Y',
-    sheetsNotReady:   'N',
+    jsonArrayKey:     "data",
+    isReadyKey:       "isReady",
+    sheetsAreReady:   "Y",
+    sheetsNotReady:   "N",
+    updatedAt:        "updated_at",
+    syncAt:           "sync_at",
   };
 
   var defaultCellStyle = {
@@ -120,11 +122,16 @@
 
   function onLastUpdateTimeAvailable(lastUpdatedAtResponse) {
     //console.log('onLastUpdateTimeAvailable');
-    console.log(lastUpdatedAtResponse);    
+    console.log(lastUpdatedAtResponse);
     try {
       var lastUpdatedAtJson = JSON.parse(lastUpdatedAtResponse);
       if(lastUpdatedAtJson) {
-        setDomInnerText(lastUpdatedAtJson[jsonKeyDefine.jsonArrayKey], 'last_update_time');
+        if (lastUpdatedAtJson.hasOwnProperty(jsonKeyDefine.updatedAt)) {
+          setDomInnerText(lastUpdatedAtJson[jsonKeyDefine.updatedAt], 'last_update_time');
+        }
+        if (lastUpdatedAtJson.hasOwnProperty(jsonKeyDefine.syncAt)) {
+          setDomInnerText(lastUpdatedAtJson[jsonKeyDefine.syncAt], 'last_sync_time');
+        }
       }
     }
     catch (error) {

@@ -18,8 +18,18 @@
     var eDetailGrid2 = this.eGui.querySelector('.full-width-grid2');
 
     var saDetailsColumnDefs = [
+      // { headerName: "ITM", field: "item", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', cellRenderer: 'agGroupCellRenderer' },
+      // { headerName: "Part#", field: "part_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-item' },
+      // { headerName: "Model#", field: "model_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-item' },
+      // { headerName: "Qty", field: "qty", cellStyle: defaultCellStyle, headerClass: 'header-sa-item' },
+      // { headerName: "CK#", field: "ck_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-item' },
+      // { headerName: "Est. Ship Date", field: "est_ship_date", cellStyle: defaultCellStyle, headerClass: 'header-sa-item' },
+      // { headerName: "Delay day", field: "delay_day", cellStyle: defaultCellStyle, headerClass: 'header-sa-item' },
+      //{ headerName: "ITM", field: "item", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', cellRenderer: 'agGroupCellRenderer', width: 50, suppressSizeToFit: true },
       { headerName: "ITM", field: "item", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', cellRenderer: 'agGroupCellRenderer', width: 80 },
+      //{ headerName: "Part#", field: "part_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', width: 160 },
       { headerName: "Part#", field: "part_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', wrapText: true },
+      //{ headerName: "Model#", field: "model_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', width: 160 },
       { headerName: "Model#", field: "model_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', wrapText: true },
       { headerName: "Qty", field: "qty", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', width: 50 },
       { headerName: "CK#", field: "ck_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-item', width: 95 },
@@ -28,13 +38,22 @@
     ];
 
     var boxColumnDefs = [
+      // { headerName: "EP#", field: "ep_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-box' },
+      // { headerName: "Length", field: "length", cellStyle: defaultCellStyle, headerClass: 'header-sa-box' },
+      // { headerName: "Width", field: "width", cellStyle: defaultCellStyle, headerClass: 'header-sa-box' },
+      // { headerName: "Height", field: "height", cellStyle: defaultCellStyle, headerClass: 'header-sa-box' },
+      // { headerName: "Gross Weight", field: "gross_weight", cellStyle: defaultCellStyle, headerClass: 'header-sa-box' },
+      // { headerName: "Net Weight", field: "net_weight", cellStyle: defaultCellStyle, headerClass: 'header-sa-box' },
+      // { headerName: "Qty", field: "qty", cellStyle: defaultCellStyle, headerClass: 'header-sa-box' },
+      // { headerName: "Tracking#", field: "tracking_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-box' },
       { headerName: "EP#", field: "ep_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 90 },
       { headerName: "Length", field: "length", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 70 },
       { headerName: "Width", field: "width", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 65 },
       { headerName: "Height", field: "height", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 70 },
       { headerName: "Gross Weight", field: "gross_weight", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 68 },
       { headerName: "Net Weight", field: "net_weight", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 68 },
-      { headerName: "Qty", field: "qty", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 48 },      
+      { headerName: "Qty", field: "qty", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 48 },
+      //{ headerName: "Tracking#", field: "tracking_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', width: 120 },
       { headerName: "Tracking#", field: "tracking_num", cellStyle: defaultCellStyle, headerClass: 'header-sa-box', wrapText: true },
     ];
 
@@ -50,6 +69,8 @@
       columnDefs: itemDetailsColumnDefs,
       defaultColDef: agGridDefaultColDef2,
       enableCellTextSelection: true,
+      //detailRowAutoHeight: true,
+      //rowHeight: 56, // pixels
       headerHeight: 46, // 28 * 18
       onGridReady: function (params) {
         // using auto height to fit the height of the the detail grid
@@ -67,7 +88,7 @@
       },
     };
 
-    ///
+  ///
 
     // level 3 grid options - boxes data
     var boxesDetailGridOptions = {
@@ -75,9 +96,12 @@
       defaultColDef: agGridDefaultColDef2,
       enableCellTextSelection: true,
       rowData: this.params.data.boxes_data,
+      //rowHeight: 28, // pixels
       onGridReady: function (params) {
         // using auto height to fit the height of the the detail grid
         params.api.setDomLayout('autoHeight');
+        //autoSizeAll(params, false);
+        //params.api.sizeColumnsToFit(); // similar to ``flow:1``
       },
     };
   
@@ -95,11 +119,31 @@
       onGridReady: function (params) {
         // using auto height to fit the height of the the detail grid
         params.api.setDomLayout('autoHeight');
+        //autoSizeAll(params, false);
+        //params.api.sizeColumnsToFit(); // similar to ``flow:1``
       },
       detailRowAutoHeight: true,
+      //getRowHeight: getItemDetailsRowHeight,
     };
 
-    ///
+    function getItemDetailsRowHeight(params) {
+      console.log("getItemDetailsRowHeight 0");
+      // params.node: [object Object]
+      if (!params.node) { return undefined; }
+      /// params.node.detail: [true / false]
+      if (!params.node.detail) { return undefined; }
+    
+      console.log("getItemDetailsRowHeight - data.length: [" + params.data.item_details_data.length + "]");
+      var gridSizes = params.api.getSizesForCurrentTheme();    
+      var itemDetailsRowHeight = params.data.item_details_data.length * gridSizes.rowHeight;      
+      var offset = params.data.item_details_data.length * 7 + 30;
+      var headerHeight = ((gridSizes && gridSizes.headerHeight) || 0);
+      var saDetailsRowHeight = offset + headerHeight + itemDetailsRowHeight;
+      //console.log("getItemDetailsRowHeight - saDetailsRowHeight: [" + saDetailsRowHeight + "]")
+      return saDetailsRowHeight;
+    }
+
+  //
 
     new agGrid.Grid(eDetailGrid1, saDetailsDetailGridOptions);
     new agGrid.Grid(eDetailGrid2, boxesDetailGridOptions);

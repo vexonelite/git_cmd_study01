@@ -39,6 +39,7 @@ const keyValueDefinitions = {
   sa_num:               "sa_num",
   date:                 "date",
   updated_at:           "updated_at",
+  sync_at:              "sync_at",
   //yearMonth:            'yearMonth',
   //soYxNumberInfo:       'soYxNumberInfo',
 
@@ -738,17 +739,38 @@ function getLastUpdateTime() {
 	return getLastUpdateTimeInternal(getSheetId(), SHEET_TAB_DEFINITIONS.uTimeSheet);
 }
 
+// [start] added by elite_lin - 2022/08/18
+function getDateTimeString(givenArray, index) {
+  if (!givenArray) { return ''; }
+  if ((index < 0) || (index >= givenArray.length) ) { return ''; }
+  
+  let dateTimeString = '';
+  if (isValidDateObject(givenArray[index])) {
+    dateTimeString = Utilities.formatDate(givenArray[0], 'Etc/GMT', 'yyyy/MM/dd HH:mm:ss');
+  }
+  else {
+    const dateObj = new Date(givenArray[index]);
+    if (isValidDateObject(dateObj)) {
+      dateTimeString = Utilities.formatDate(dateObj, 'Etc/GMT', 'yyyy/MM/dd HH:mm:ss');
+    }
+  }
+  return dateTimeString;
+}
+// [end] added by elite_lin - 2022/08/18
+
 // [start] revision by elite_lin - 2022/06/23
 function getLastUpdateTimeInternal(sheedId, updateTimeTabName) {
+  const result = {};
+
   const spreadsheet = SpreadsheetApp.openById(sheedId);
   if(!spreadsheet) {
     Logger.log('getLastUpdateTime - spreadsheet is unavailable!!');
-    return '';
+    return JSON.stringify(result);
   }
   const updateTimeRowDataSetResponse = getRowDataSetBySheetName(spreadsheet, updateTimeTabName);
   if(updateTimeRowDataSetResponse[keyValueDefinitions.error] != statusCodeTable.success) {
     Logger.log('getLastUpdateTime - updateTimeRowDataSet is unavailable!!');
-    return ''; 
+    return JSON.stringify(result); 
   }
   try {
     //const rawTitleRow = updateTimeRowDataSet[0].map(String);
@@ -757,21 +779,17 @@ function getLastUpdateTimeInternal(sheedId, updateTimeTabName) {
     rawBodyRows.forEach(function(rowItem, row_index) {
       bodyRowsArray.push(rowItem);
     });
-    //Logger.log(bodyRowsArray[0]);
+    
+    const updatedAt = getDateTimeString(bodyRowsArray, 0);
+    if (!isEmptyContent(updatedAt)) {
+      result[keyValueDefinitions.updated_at] = updatedAt;
+    }
+    
+    const syncAt = getDateTimeString(bodyRowsArray, 1);
+    if (!isEmptyContent(syncAt)) {
+      result[keyValueDefinitions.sync_at] = syncAt;
+    }
 
-    let dateString = '';
-    if (isValidDateObject(bodyRowsArray[0])) {
-      dateString = Utilities.formatDate(bodyRowsArray[0], 'Etc/GMT', 'yyyy/MM/dd HH:mm:ss');
-    }
-    else {
-      const dateObj = new Date(bodyRowsArray[0]);
-      if (isValidDateObject(dateObj)) {
-        dateString = Utilities.formatDate(dateObj, 'Etc/GMT', 'yyyy/MM/dd HH:mm:ss');
-      }
-    }
-    //Logger.log(dateString);
-    const result = {};
-    result[keyValueDefinitions.data] = dateString;
     return JSON.stringify(result);
   }
   catch(error) {
